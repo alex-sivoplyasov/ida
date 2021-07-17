@@ -2,13 +2,12 @@
   <header class="header">
     <div class="container">
       <div class="header__content">
-        <div class="header__logo" @click="openCart">TestList</div>
-        <div class="header__basket">
-          <img src="static/icons/basket.svg" alt="" class="header__basket-image">
-          <div class="header__basket-count">{{cartProductsCount}}</div>
+        <div class="header__logo">TestList</div>
+        <div class="header__cart" @click="openCart">
+          <img src="~/assets/icons/basket.svg" alt="" class="header__cart-image">
+          <div class="header__cart-count">{{cartProductsCount}}</div>
         </div>
       </div>
-
     </div>
   </header>
 </template>
@@ -16,20 +15,7 @@
 <script>
 export default {
   name: "Header",
-  computed: {
-    cartProductsCount() {
-      let count = 0
-      Object.keys(this.$store.getters['cart/products']).forEach( id => {
-
-        if(this.$store.getters['cart/products'][id].id)
-          count++
-      })
-
-      console.log('recount', count)
-
-      return count
-    }
-  },
+  props: ['cartProductsCount'],
   methods: {
     openCart() {
       this.$store.commit('cart/toggleCart', true)
@@ -58,11 +44,12 @@ export default {
     color: #59606D;
   }
 
-  &__basket {
+  &__cart {
     position: relative;
+    cursor: pointer;
   }
 
-  &__basket-count {
+  &__cart-count {
     position: absolute;
     top: -5px;
     left: 18px;
@@ -79,7 +66,7 @@ export default {
     color: #FFFFFF;
   }
 
-  &__basket-image {
+  &__cart-image {
     margin-right: 20px;
   }
 

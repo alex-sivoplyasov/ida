@@ -1,11 +1,11 @@
 <template>
   <div>
-    <Header/>
+    <Header :cartProductsCount="cartProductsCount"/>
     <div class="container">
       <main class="content">
         <Menu/>
         <Catalog/>
-        <Cart/>
+        <Cart :cartProductsCount="cartProductsCount"/>
       </main>
     </div>
   </div>
@@ -35,6 +35,15 @@ export default {
     },
     products() {
       return this.$store.getters['products/products']
+    },
+    cartProductsCount() {
+      let count = 0
+      Object.keys(this.$store.getters['cart/products']).forEach( id => {
+
+        if(this.$store.getters['cart/products'][id].id)
+          count++
+      })
+      return count
     }
   },
   components: {Header, Menu, Catalog, Cart}
@@ -58,5 +67,11 @@ div {
 .content {
   display: flex;
   padding-top: 30px;
+}
+
+@media (max-width: 1300px)  {
+  .container {
+    width: 90%;
+  }
 }
 </style>

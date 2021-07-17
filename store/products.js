@@ -24,5 +24,8 @@ export const getters = {
 
 
 function sortByField(field) {
-  return (a, b) => a[field] > b[field] ? 1 : -1
+  if(field === 'price')
+    return (a, b) => a[field] > b[field] ? 1 : -1
+  else
+    return (a, b) => a[field] < b[field] ? 1 : -1
 }

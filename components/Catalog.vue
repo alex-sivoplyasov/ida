@@ -2,7 +2,7 @@
   <section class="catalog">
     <div class="catalog__sort">
       <div class="catalog__sort-text">Сортировать по:</div>
-      <div class="catalog__sort-value" @click="toggleSortBlock">{{sortBy}}</div>
+      <div class="catalog__sort-value" @click="toggleSortBlock" :class="{open: isOpenSortBlock}">{{sortBy}}</div>
       <div class="catalog__sort-list" v-if="isOpenSortBlock">
         <div class="catalog__sort-item" @click="sortProducts('price', 'цене')" data-sort="price">
           По цене
@@ -14,10 +14,10 @@
     </div>
 
     <div class="catalog__products">
-      <div class="catalog__product-wrapper" v-for="product in products" :key="product.id">
-        <div class="catalog__product" @click="addToCart(product)">
+      <div class="catalog__product-wrapper" v-for="product in products" :key="product.id" v-if="product.category === currentCategoryId">
+        <div class="catalog__product">
           <div class="catalog__product-rating" v-if="product.rating"> {{product.rating}}</div>
-          <div class="catalog__product-button"></div>
+          <img src="~assets/icons/basket.svg" alt="" class="catalog__product-button" @click="addToCart(product)"/>
           <div class="catalog__product-image-wrapper">
             <img :src=" `https://frontend-test.idaproject.com${product.photo}` " alt="" class="catalog__product-image">
           </div>
@@ -38,6 +38,9 @@ export default {
   computed: {
     products() {
       return this.$store.getters['products/products']
+    },
+    currentCategoryId() {
+      return this.$store.getters['categories/currentCategoryId']
     }
   },
   methods: {
@@ -88,24 +91,41 @@ export default {
   }
 
   &__sort-value {
+    position: relative;
     display: flex;
     align-items: flex-end;
     color: #59606D;
     cursor: pointer;
+
+    &:before {
+      content: '';
+      position: absolute;
+      top: 9px;
+      right: -8px;
+      width: 5px;
+      height: 3px;
+      background-image:  url('~assets/icons/arrow.svg');
+      transform: rotate(180deg);
+    }
+
+    &.open {
+      &:before {
+        transform: rotate(0deg);
+        top: 11px;
+      }
+    }
   }
 
   &__sort-list {
     position: absolute;
-    right: 22px;
+    right: -8px;
     top: 31px;
+    width: 160px;
     padding: 8px 0 12px;
     background: #FFFFFF;
-    //box-shadow: 0px 4px 16px rgba(0 0 0 / 5%);
+    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.05);
     border-radius: 8px;
-  }
-
-  &__sort-list.active {
-
+    z-index: 1;
   }
 
   &__sort-item {
@@ -124,7 +144,7 @@ export default {
   &__products {
     display: flex;
     flex-wrap: wrap;
-    margin: 0 -8px;
+    margin: 35px -8px 0;
   }
 
   &__product-wrapper {
@@ -134,6 +154,7 @@ export default {
   }
 
   &__product {
+    position: relative;
     background: #FFFFFF;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
     border-radius: 8px;
@@ -141,11 +162,31 @@ export default {
   }
 
   &__product-rating {
-
+    position: absolute;
+    top: 20px;
+    left: 36px;
+    font-weight: bold;
+    font-size: 10px;
+    line-height: 13px;
+    color: #F2C94C;
+    &:before {
+      content: '';
+      position: absolute;
+      left: -18px;
+      top: 0;
+      width: 14px;
+      height: 14px;
+      background-image:  url('~assets/icons/star.svg');
+    }
   }
 
   &__product-button {
-
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    width: 12px;
+    height: 13px;
+    cursor: pointer;
   }
 
   &__product-image-wrapper {
@@ -162,6 +203,7 @@ export default {
   }
 
   &__product-name {
+    height: 36px;
     margin-top: 16px;
     font-size: 14px;
     line-height: 18px;

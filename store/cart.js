@@ -10,11 +10,14 @@ export const mutations = {
   removeProduct(state, product) {
     state.products = {...state.products, [product.id]: {} }
 
-    console.log('--------------------remove', state.products)
   },
   toggleCart(state, status) {
-    console.log('status', status)
     state.isOpen = status
+  },
+  removeAllProducts(state) {
+    Object.keys(state.products).map( productId => {
+      return state.products[productId] = {}
+    })
   }
 }
 

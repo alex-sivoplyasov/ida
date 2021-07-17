@@ -1,12 +1,11 @@
 <template>
   <section class="menu">
-    <div class="menu__title" @click="test">
+    <div class="menu__title">
       Каталог
     </div>
 
     <div class="menu__list" v-for="category in categories" :key="category.id">
-<!--      <NuxtLink :to='category.id' class="menu__item">{{category.name}}</NuxtLink>-->
-      <div class="menu__item">{{category.name}}</div>
+      <div class="menu__item" :class="{active: (currentCategoryId === category.id)}" @click="changeCategory(category.id)">{{ category.name }}</div>
     </div>
   </section>
 </template>
@@ -16,22 +15,17 @@ export default {
   name: "Menu",
   computed: {
     categories() {
-      console.log('cats', this.$store.getters['categories/categories'])
       return this.$store.getters['categories/categories']
+    },
+    currentCategoryId() {
+      return this.$store.getters['categories/currentCategoryId']
     }
   },
   methods: {
-    openCategory(category) {
-      this.$router.push('/' + category.id)
-    },
-    test() {
-      console.log('cats', this.$store.getters['categories/categories'])    }
-  },
-  // async fetch({store}) {
-  //   console.log('11111111')
-  //   if(store.getters['categories/categories'].length === 0)
-  //     await store.dispatch('categories/getCategories')
-  // }
+    changeCategory(categoryId) {
+      this.$store.commit('categories/setCategoryId', categoryId)
+    }
+  }
 }
 </script>
 

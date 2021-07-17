@@ -2,67 +2,69 @@
   <div class="cart" v-if="isOpenCart">
     <div class="cart__container">
       <div class="cart__header">
-        <div class="cart__title" @click="closeCart">
+        <div class="cart__title">
           Корзина
+        </div>
+
+        <img src="~assets/icons/cross.svg" class="cart__close" @click="closeCart"/>
+      </div>
+
+      <div class="cart__content" v-if="cartProductsCount">
+        <CartProducts/>
+      </div>
+      <CartForm v-if="cartProductsCount" @submitForm="submitForm"/>
+
+      <div class="cart__empty" v-if="!cartProductsCount && !isSuccess">
+        <div class="cart__empty-title">
+          Пока что вы ничего не добавили
+          в корзину.
+        </div>
+
+        <div class="cart__empty-button" @click="closeCart">
+          Перейти к выбору
         </div>
       </div>
 
-      <div class="cart__content">
-        <div class="cart__products-title">
-          Товары в корзине
+      <div class="cart__success" v-if="isSuccess">
+        <img src="~assets/icons/ok.svg" alt="" class="cart__success-image">
+        <div class="cart__success-title">
+          Заявка успешно отправлена
         </div>
-        <div class="cart__products">
-          <div class="cart__product" @click="removeFromCart(product)" v-for="product in products" :key="product.id" v-if="product.id">
-            <div class="cart__product-image-wrapper">
-              <img :src="`https://frontend-test.idaproject.com${product.photo}`" alt="" class="cart__product-image">
-            </div>
-            <div class="cart__product-content">
-              <div class="cart__product-name"> {{product.name}}</div>
-              <div class="cart__product-price">{{product.price}} P</div>
-              <div class="cart__product-rating"> {{product.rating}}</div>
-            </div>
-          </div>
+        <div class="cart__success-info">
+          Вскоре наш менеджер свяжется с Вами
         </div>
       </div>
+
     </div>
 
   </div>
 </template>
 
 <script>
+import CartProducts from "./CartProducts";
+import CartForm from "./CartForm";
+
 export default {
   name: "Cart",
+  props: ['cartProductsCount'],
+  data: () => ({
+    isSuccess: false
+  }),
   computed: {
-    products() {
-      console.log('------get-------------', this.$store.getters['cart/products'])
-      return this.$store.getters['cart/products']
-    },
-    // sum() {
-    //   let sum = 0
-    //
-    //   Object.keys(this.products).forEach( (productId) => {
-    //     console.log('---pr----', this.products[productId].price)
-    //     if(this.products[productId].price)
-    //       sum = sum + this.products[productId].price
-    //   })
-    //
-    //   return sum
-    // },
     isOpenCart() {
-      console.log(this.$store.getters['cart/isOpen'])
       return this.$store.getters['cart/isOpen']
     }
   },
   methods: {
-    removeFromCart(product) {
-      console.log('remove from cart')
-      this.$store.commit('cart/removeProduct', product)
-
-    },
     closeCart() {
       this.$store.commit('cart/toggleCart', false)
+    },
+    submitForm(data) {
+      console.log('ssssucess')
+      this.isSuccess = true
     }
-  }
+  },
+  components: {CartProducts, CartForm}
 }
 </script>
 
@@ -83,76 +85,77 @@ export default {
     background: #FFFFFF;
     box-shadow: -4px 0px 16px rgba(0, 0, 0, 0.05);
     border-radius: 8px 0px 0px 8px;
+    overflow-x: scroll;
   }
 
   &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     margin-top: 4px;
+    margin-bottom: 24px;
   }
 
   &__title {
-    margin-bottom: 24px;
     font-weight: bold;
     font-size: 32px;
     line-height: 41px;
     color: #000000;
   }
 
-  &__products-title {
-    margin-bottom: 16px;
+  &__close {
+    cursor: pointer;
   }
 
-  &__products {
-    display: flex;
-    flex-wrap: wrap;
+  &__empty-title {
+    margin-bottom: 24px;
+    font-size: 22px;
+    line-height: 28px;
+    color: #000000;
   }
 
-  &__product {
-    display: flex;
-    width: 100%;
-    padding: 12px 64px 16px 25px;
-    margin-bottom: 12px;
-    background: #FFFFFF;
-    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.05);
-    border-radius: 8px;
-  }
-
-  &__product-image-wrapper {
+  &__empty-button {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 70px;
-    height: 90px;
+    padding: 14px;
+    background: #1F1F1F;
+    border-radius: 8px;
+    font-size: 16px;
+    line-height: 21px;
+    color: #FFFFFF;
+    cursor: pointer;
+    &:hover {
+      background: #59606D;
+    }
   }
 
-  &__product-image {
-    max-height: 100%;
-    max-width: 100%;
+  &__success {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
   }
 
-  &__product-content {
-    margin-left: 34px;
+  &__success-image {
+    margin-bottom: 24px;
+    width: 80px;
+    height: 80px;
   }
 
-  &__product-name {
-    margin-bottom: 6px;
-    font-size: 14px;
-    line-height: 18px;
+  &__success-title {
+    margin-bottom: 2px;
+    font-weight: bold;
+    font-size: 24px;
+    line-height: 31px;
+    color: #000000;
+  }
+
+  &__success-info {
+    font-size: 16px;
+    line-height: 21px;
     color: #59606D;
-  }
-
-  &__product-price {
-    margin-bottom: 19px;
-    font-weight: bold;
-    font-size: 14px;
-    line-height: 18px;
-    color: #1F1F1F;
-  }
-
-  &__product-rating {
-    font-weight: bold;
-    font-size: 10px;
-    line-height: 13px;
-    color: #F2C94C;
   }
 }
 
