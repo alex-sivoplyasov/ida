@@ -6,7 +6,7 @@
 
     <div class="menu__list" v-for="category in categories" :key="category.id">
 <!--      <NuxtLink :to='category.id' class="menu__item">{{category.name}}</NuxtLink>-->
-      <a href="#" @click.prevent="openCategory(category)" class="menu__item">{{category.name}}</a>
+      <div class="menu__item">{{category.name}}</div>
     </div>
   </section>
 </template>
@@ -27,11 +27,11 @@ export default {
     test() {
       console.log('cats', this.$store.getters['categories/categories'])    }
   },
-  async fetch({store}) {
-    console.log('11111111')
-    if(store.getters['categories/categories'].length === 0)
-      await store.dispatch('categories/getCategories')
-  }
+  // async fetch({store}) {
+  //   console.log('11111111')
+  //   if(store.getters['categories/categories'].length === 0)
+  //     await store.dispatch('categories/getCategories')
+  // }
 }
 </script>
 
@@ -59,6 +59,7 @@ export default {
     line-height: 21px;
     color: #959DAD;
     text-decoration: none;
+    cursor: pointer;
   }
 
   &__item:hover {

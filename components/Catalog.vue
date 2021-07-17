@@ -2,27 +2,27 @@
   <section class="catalog">
     <div class="catalog__sort">
       <div class="catalog__sort-text">Сортировать по:</div>
-      <div class="catalog__sort-value">цене</div>
-      <div class="catalog__sort-list">
-        <div class="catalog__sort-item">
+      <div class="catalog__sort-value" @click="toggleSortBlock">{{sortBy}}</div>
+      <div class="catalog__sort-list" v-if="isOpenSortBlock">
+        <div class="catalog__sort-item" @click="sortProducts('price', 'цене')" data-sort="price">
           По цене
         </div>
-        <div class="catalog__sort-item">
+        <div class="catalog__sort-item" @click="sortProducts('rating', 'популярности')" data-sort="rating">
           По популярности
         </div>
       </div>
     </div>
 
     <div class="catalog__products">
-      <div class="catalog__product-wrapper">
-        <div class="catalog__product">
-          <div class="catalog__product-rating">4.5</div>
+      <div class="catalog__product-wrapper" v-for="product in products" :key="product.id">
+        <div class="catalog__product" @click="addToCart(product)">
+          <div class="catalog__product-rating" v-if="product.rating"> {{product.rating}}</div>
           <div class="catalog__product-button"></div>
           <div class="catalog__product-image-wrapper">
-            <img src="static/icons/basket.svg" alt="" class="catalog__product-image">
+            <img :src=" `https://frontend-test.idaproject.com${product.photo}` " alt="" class="catalog__product-image">
           </div>
-          <div class="catalog__product-name">Рюкзак Louis Vuitton Discovery</div>
-          <div class="catalog__product-price">150 000 ₽</div>
+          <div class="catalog__product-name"> {{product.name}} </div>
+          <div class="catalog__product-price">{{product.price}} ₽</div>
         </div>
       </div>
     </div>
@@ -31,22 +31,30 @@
 
 <script>
 export default {
-  async fetch({store}) {
-    if(store.getters['products/products'].length === 0)
-      await store.dispatch('products/getProducts')
-  },
+  data: () =>({
+    isOpenSortBlock: false,
+    sortBy: 'цене'
+  }),
   computed: {
-    categories() {
+    products() {
       return this.$store.getters['products/products']
     }
   },
-  name: "Catalog",
-  data: () => ({
-    products: []
-  }),
   methods: {
-
-  }
+    toggleSortBlock() {
+      this.isOpenSortBlock = !this.isOpenSortBlock
+    },
+    sortProducts(field, text) {
+      this.isOpenSortBlock = false
+      this.$store.commit('products/sortProducts', field)
+      this.sortBy = text
+    },
+    addToCart(product) {
+      console.log('prod', product)
+      this.$store.commit('cart/addProduct', product)
+    }
+  },
+  name: "Catalog",
 }
 </script>
 
@@ -77,17 +85,16 @@ export default {
     align-items: flex-end;
     color: #1F1F1F;
     margin-right: 6px;
-    cursor: pointer;
   }
 
   &__sort-value {
     display: flex;
     align-items: flex-end;
     color: #59606D;
+    cursor: pointer;
   }
 
   &__sort-list {
-    display: none;
     position: absolute;
     right: 22px;
     top: 31px;
@@ -95,9 +102,6 @@ export default {
     background: #FFFFFF;
     //box-shadow: 0px 4px 16px rgba(0 0 0 / 5%);
     border-radius: 8px;
-    &.active {
-      display: block;
-    }
   }
 
   &__sort-list.active {

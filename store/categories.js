@@ -11,7 +11,6 @@ export const mutations = {
 export const actions = {
   async getCategories({commit}) {
     const response = await this.$axios.get('https://frontend-test.idaproject.com/api/product-category')
-    console.log('ree', response.data)
     commit('setCategories', response.data)
   }
 }

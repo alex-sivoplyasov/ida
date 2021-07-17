@@ -2,13 +2,10 @@
   <header class="header">
     <div class="container">
       <div class="header__content">
-        <div class="header__logo">TestList</div>
-
-        <NuxtLink to="/">Home</NuxtLink>
-        <NuxtLink to="/catalog">Cats Page</NuxtLink>
+        <div class="header__logo" @click="openCart">TestList</div>
         <div class="header__basket">
           <img src="static/icons/basket.svg" alt="" class="header__basket-image">
-          <div class="header__basket-count">3</div>
+          <div class="header__basket-count">{{cartProductsCount}}</div>
         </div>
       </div>
 
@@ -18,7 +15,26 @@
 
 <script>
 export default {
-  name: "Header"
+  name: "Header",
+  computed: {
+    cartProductsCount() {
+      let count = 0
+      Object.keys(this.$store.getters['cart/products']).forEach( id => {
+
+        if(this.$store.getters['cart/products'][id].id)
+          count++
+      })
+
+      console.log('recount', count)
+
+      return count
+    }
+  },
+  methods: {
+    openCart() {
+      this.$store.commit('cart/toggleCart', true)
+    }
+  }
 }
 </script>
 

@@ -1,37 +1,62 @@
 <template>
   <div>
-    page
+    <Header/>
+    <div class="container">
+      <main class="content">
+        <Menu/>
+        <Catalog/>
+        <Cart/>
+      </main>
+    </div>
   </div>
-<!--  <ul v-if="categories.length">-->
-<!--    <li v-for="category in categories" :key="category.id">-->
-<!--      {{category.name}}-->
-<!--    </li>-->
-<!--  </ul>-->
 </template>
 
 <script>
+
+import Header from "../components/Header";
+import Menu from "../components/Menu";
+import Catalog from "../components/Catalog";
+import Cart from "../components/Cart";
+
 export default {
   async fetch({store}) {
-    // console.log('')
-    console.log('fetch2')
     if(store.getters['categories/categories'].length === 0)
       await store.dispatch('categories/getCategories')
+
+    if(store.getters['products/products'].length === 0) {
+      await store.dispatch('products/getProducts')
+      store.commit('products/sortProducts', 'price')
+    }
+
   },
-  // async asyncData({$axios}) {
-  //   const url = 'https://frontend-test.idaproject.com/api/product-category'
-  //   const res = await $axios.get(url)
-  //   const categories = res.data
-  //
-  //   console.log(res.data)
-  //   return {categories}
-  // },
-  // data: () => ({
-  //   categories: []
-  // }),
   computed: {
     categories() {
       return this.$store.getters['categories/categories']
+    },
+    products() {
+      return this.$store.getters['products/products']
     }
-  }
+  },
+  components: {Header, Menu, Catalog, Cart}
 }
 </script>
+
+<style>
+body {
+  font-family: 'PT Sans', sans-serif;
+}
+
+div {
+  box-sizing: border-box;
+}
+
+.container {
+  max-width: 1264px;
+  margin: 0 auto;
+}
+
+.content {
+  display: flex;
+  padding-top: 30px;
+}
+</style>
