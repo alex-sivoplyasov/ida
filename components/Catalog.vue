@@ -31,6 +31,7 @@
 
 <script>
 export default {
+  name: "Catalog",
   data: () =>({
     isOpenSortBlock: false,
     sortBy: 'цене'
@@ -53,14 +54,12 @@ export default {
       this.sortBy = text
     },
     addToCart(product) {
-      console.log('prod', product)
       this.$store.commit('cart/addProduct', product)
     },
     formattedPrice(price) {
       return price.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1 ')
     }
   },
-  name: "Catalog",
 }
 </script>
 

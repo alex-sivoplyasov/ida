@@ -60,7 +60,6 @@ export default {
       this.$store.commit('cart/toggleCart', false)
     },
     submitForm(data) {
-      console.log('ssssucess')
       this.isSuccess = true
     }
   },

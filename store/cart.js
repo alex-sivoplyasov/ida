@@ -21,13 +21,6 @@ export const mutations = {
   }
 }
 
-export const actions = {
-  // async getProducts({commit}) {
-  //   const response = await this.$axios.get('https://frontend-test.idaproject.com/api/product')
-  //   commit('setProducts', response.data)
-  // }
-}
-
 export const getters = {
   products: s => s.products,
   isOpen: s => s.isOpen
