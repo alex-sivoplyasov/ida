@@ -22,7 +22,7 @@
             <img :src=" `https://frontend-test.idaproject.com${product.photo}` " alt="" class="catalog__product-image">
           </div>
           <div class="catalog__product-name"> {{product.name}} </div>
-          <div class="catalog__product-price">{{product.price}} ₽</div>
+          <div class="catalog__product-price">{{formattedPrice(product.price)}} ₽</div>
         </div>
       </div>
     </div>
@@ -55,6 +55,9 @@ export default {
     addToCart(product) {
       console.log('prod', product)
       this.$store.commit('cart/addProduct', product)
+    },
+    formattedPrice(price) {
+      return price.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1 ')
     }
   },
   name: "Catalog",

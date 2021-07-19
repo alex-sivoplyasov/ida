@@ -12,7 +12,7 @@
         </div>
         <div class="cart__product-content">
           <div class="cart__product-name"> {{ product.name }}</div>
-          <div class="cart__product-price">{{ product.price }} P</div>
+          <div class="cart__product-price">{{ formattedPrice(product.price) }} ₽</div>
           <div class="cart__product-rating"> {{ product.rating }}</div>
         </div>
       </div>
@@ -31,6 +31,9 @@ export default {
   methods: {
     removeFromCart(product) {
       this.$store.commit('cart/removeProduct', product)
+    },
+    formattedPrice(price) {
+      return price.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1 ')
     }
   }
 }
